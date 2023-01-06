@@ -1,0 +1,3 @@
+[submodule "test/riscv/RISC-V-TLM"]
+	path = test/riscv/RISC-V-TLM
+	url = git@github.com:ethanrobbins/RISC-V-TLM.git

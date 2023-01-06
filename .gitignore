@@ -1,0 +1,11 @@
+systemc/build_dir
+systemc/install
+systemc/systemc-2.3.4
+systemc/2.3.4.tar.gz
+build
+sim
+/foo
+*.so
+__pycache__
+trace.vcd
+*.sqlite

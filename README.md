@@ -80,10 +80,10 @@ for cache_size in [2,4,8,16]:
 * Running test case (see tests/riscv/README.md)
    * Download fork of mariusmm/RISC-V-TLM from ethanrobbins/RISC-V-TLM
    ```
-   git submodule update ???
+   git submodule update test/riscv/RISC-V-TLM
    ```
 
-   * Build dhrystone
+   * Build dhrystone (optional (need to modify Makefile to point to GCC-riscv), elf is checked in))
    ```
     cd test/riscv
     make dhrystone
@@ -91,6 +91,7 @@ for cache_size in [2,4,8,16]:
 
    * build the systemC lib
    ```
+    cd test/riscv
     make sim.so
     ```
 

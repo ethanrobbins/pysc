@@ -12,6 +12,8 @@ void pysc_initialize_lib(PyObject *_top_module);
 
 extern PyModuleDef sim_ModuleDef;
 
+extern "C" PyObject* pysc_proxy(void *obj, string t);
+
 #define TRACE_SIG(F, X) sc_core::sc_trace(F, X, X.name())
 
 PyObject *sim_PyInit();

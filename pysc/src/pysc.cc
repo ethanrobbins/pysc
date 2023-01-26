@@ -11,7 +11,13 @@ using namespace sc_core;
 #include "pysc_time.h"
 #include "pysc_thread.h"
 
+#include "CPyCppyy/API.h"
+
 PyObject *factory_module;
+
+extern "C" PyObject* pysc_proxy(void *obj, string t){
+    return CPyCppyy::Instance_FromVoidPtr(obj, t, false);
+}
 
 /// pysc module ///
 static PyObject* pysc_wait(PyObject *self, PyObject *args){
@@ -92,10 +98,19 @@ void pysc_initialize(const char *top_module_name){
     pysc_initialized = true;
 }
 
-void pysc_initialize_lib(PyObject *_factory_module){
+void pysc_initialize_lib(){
     PyInterpreterState *intr_state = PyInterpreterState_Get();
     top_thread_state = PyThreadState_Get();//PyThreadState_New(intr_state);
- 
+
+    // setup cppyy
+    //PyObject *cppyy = PyImport_ImportModule("cppyy");
+//    CPyCppyy::Import("cppyy");
+    //PyRun_SimpleString("cppyy.add_include_path(\"../../systemc/install/include\")");
+    //PyRun_SimpleString("cppyy.add_include_path(\"src\")");
+    //PyRun_SimpleString("cppyy.add_include_path(\"../../pysc/include\")");
+    //PyRun_SimpleString("#cppyy.include(\"systemc.h\")");
+    //PyRun_SimpleString("cppyy.include(\"core.h\")");
+
     PyObject *pysc_module = PyModule_Create(&pysc_module_def);
     for(auto it: *class_setup_list){
         it(pysc_module);
@@ -106,9 +121,6 @@ void pysc_initialize_lib(PyObject *_factory_module){
     Py_DECREF(pysc_module);
     Py_DECREF(sys_modules);
 
-    factory_module = _factory_module;
-    Py_INCREF(factory_module);
-    pysc_initialized = true;
  }
 
 bool pysc_add_class(void (*setup)(PyObject *)){
@@ -151,7 +163,10 @@ static PyObject* pysc_sim_restart(PyObject *_self, PyObject *args){
 }
 
 static PyObject* pysc_sim_set_factory_module(PyObject *_self, PyObject *args){
-    pysc_initialize_lib(args);
+    factory_module = args;
+    Py_INCREF(factory_module);
+    pysc_initialized = true;
+
     cout << "SIM:: set_factory_module" << endl;
     Py_RETURN_NONE;
 }
@@ -182,5 +197,6 @@ PyModuleDef sim_ModuleDef = {
 };
 
 PyObject *sim_PyInit(){ \
+    pysc_initialize_lib(); \
     return  PyModule_Create(&sim_ModuleDef); \
 }

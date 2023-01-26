@@ -2,7 +2,8 @@
 #include <systemc>
 using namespace sc_core;
 
-CORE::CORE(sc_module_name name):sc_module(name), py("Core"),
+
+CORE::CORE(sc_module_name name):sc_module(name), py("Core",this),
         data_bus("data_bus"),
         clk_in("clk_in"),
         rd_en("rd_en"),
@@ -10,23 +11,28 @@ CORE::CORE(sc_module_name name):sc_module(name), py("Core"),
         address("address"),
         wr_data("wr_data"),
         rd_data("rd_data"),
-        data_val("data_val")
+        data_val("data_val"),
+        test_int("test_int")
 {
     //rd_en.write(0);
     //wr_en.write(0);
     //SC_METHOD(run);
     //sensitive<<this->clk_in.pos();
 
+    cout << "CORE():" << this << endl;
+
     SC_THREAD(run);
     sensitive<<this->clk_in.pos();
 
     EXPORT_SIG(clk_in, "clk_in", bool);
-    EXPORT_SIG(rd_en, "rd_en", bool);
-    EXPORT_SIG(wr_en, "wr_en", bool);
-    EXPORT_SIG(address, "address", sc_bv<32>);
-    EXPORT_SIG(wr_data, "wr_data", sc_bv<32>);
-    EXPORT_SIG(rd_data, "rd_data", sc_bv<32>);
-    EXPORT_SIG(data_val, "data_val", bool);
+    //EXPORT_SIG(rd_en, "rd_en", bool);
+    //EXPORT_SIG(wr_en, "wr_en", bool);
+    //EXPORT_SIG(address, "address", sc_bv<32>);
+    //EXPORT_SIG(wr_data, "wr_data", sc_bv<32>);
+    //EXPORT_SIG(rd_data, "rd_data", sc_bv<32>);
+    //EXPORT_SIG(data_val, "data_val", bool);
+
+    //test_int = new sc_signal<int>("test_int");
 }
 void CORE::trace(sc_trace_file *tf){
     TRACE_SIG(tf, clk_in);
@@ -36,6 +42,7 @@ void CORE::trace(sc_trace_file *tf){
     TRACE_SIG(tf, wr_data);
     TRACE_SIG(tf, rd_data);
     TRACE_SIG(tf, data_val);
+    TRACE_SIG(tf, test_int);
 }
 
 void CORE::run(){
@@ -75,4 +82,9 @@ void CORE::read(uint64_t addr, unsigned char *ptr, uint len){
     trans.set_address(addr);
 
     data_bus->b_transport(trans, delay);
+}
+
+void CORE::hello(){
+    cout << "HELLO WORLD:" << this << endl;
+    //test_int->write(42);
 }

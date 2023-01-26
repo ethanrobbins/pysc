@@ -8,15 +8,15 @@ using namespace sc_dt;
 using namespace std;
 
 class MEM: public sc_module {
-    py_module py;
+    py_module<MEM> py;
     SC_HAS_PROCESS(MEM);
     public:
     MEM(sc_module_name name);
     void run();
     void trace(sc_trace_file *tf);
 
-    //tlm_utils::simple_target_socket<MEM> socket;
-    tlm::tlm_target_socket<> socket;
+    tlm_utils::simple_target_socket<MEM> socket;
+    //tlm::tlm_target_socket<> socket;
     virtual void b_transport(tlm::tlm_generic_payload &trans, sc_time &delay);
 
     

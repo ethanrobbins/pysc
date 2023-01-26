@@ -1,7 +1,8 @@
 #include "mem.h"
 #include "pysc.h"
 
-MEM::MEM(sc_module_name name):sc_module(name), py("Mem"),
+MEM::MEM(sc_module_name name):sc_module(name), py("Mem",this),
+//MEM::MEM(sc_module_name name):sc_module(name),
     clk_in("clk_in"),
     rd_en("rd_en"),
     wr_en("wr_en"),
@@ -10,11 +11,11 @@ MEM::MEM(sc_module_name name):sc_module(name), py("Mem"),
     rd_data("rd_data"),
     data_val("data_val")
 {
-    target_socket_proxy *sock_p = py.get_target_socket("sock");
+    //target_socket_proxy *sock_p = py.get_target_socket("sock");
 
-    socket.bind(sock_p->socket);
+    //socket.bind(sock_p->socket);
 
-    //socket.register_b_transport(this, &MEM::b_transport);
+    socket.register_b_transport(this, &MEM::b_transport);
     //data_val.write(0);
     //rd_data.write(0);
     SC_METHOD(run);

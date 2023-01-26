@@ -12,7 +12,7 @@ using namespace std;
 class CORE: public sc_module {
     SC_HAS_PROCESS(CORE);
     public:
-        py_module py;
+        py_module<CORE> py;
         CORE(sc_module_name name);
         void run();
         void trace(sc_trace_file *tf);
@@ -30,4 +30,9 @@ class CORE: public sc_module {
         sc_in<sc_bv<32>> rd_data;
         sc_in<bool> data_val;
 
+        sc_signal<int> test_int;
+
+        void hello();
+
 };
+

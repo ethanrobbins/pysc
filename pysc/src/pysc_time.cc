@@ -51,6 +51,24 @@ PyObject* pysc_time_str(PyObject *_self){
     return r;
 }
 
+static void pysc_time_free(void *p){
+    cout << "pysc_time_free " << p << endl;
+    PyObject_Free(p);
+}
+
+static void pysc_time_dealloc(PyObject *_self){
+    cout << "pysc_time_dealloc " << _self << endl;
+    PyObject_Del(_self);
+}
+
+static PyObject * pysc_time_alloc(PyTypeObject *_self, Py_ssize_t nitems){
+    PyObject *r = PyType_GenericAlloc(_self, nitems);
+    cout << "pysc_time_alloc " << r << " " << nitems << endl;
+
+    return r;
+}
+
+
 //TODO add support for creating a new time object
 
 PyTypeObject pysc_time_Type = {
@@ -77,6 +95,9 @@ static void setup(PyObject *pysc_module){
     pysc_time_Type.tp_init = &pysc_time_init;
     pysc_time_Type.tp_str = &pysc_time_str;
     pysc_time_Type.tp_new = PyType_GenericNew;
+    pysc_time_Type.tp_alloc = pysc_time_alloc;
+    pysc_time_Type.tp_free = pysc_time_free;
+    pysc_time_Type.tp_dealloc = pysc_time_dealloc;
 
     PyObject *dict = PyDict_New();
     PyDict_SetItemString(dict, "SC_MS", PyLong_FromLong(SC_MS));

@@ -6,9 +6,13 @@ HEADERS = $(wildcard src/*.h) $(wildcard include/*.h)
 
 DEFS = -DSC_INCLUDE_DYNAMIC_PROCESSES
 
+GXX := g++
+#x86_64-conda-linux-gnu-g++
+
 ROOT_PWD = $(shell pwd)/..
 CXX_FLAGS = $(DEFS) -std=c++17 -fPIC -g -I$(ROOT_PWD)/systemc/install/include -Isrc -Iinclude -L$(ROOT_PWD)/systemc/install/lib-linux64 -lsystemc $(shell python3-config --includes)
-LD_FLAGS = -fPIC -L$(ROOT_PWD)/systemc/install/lib-linux64 -lsystemc -lm -Wl,-rpath,$(ROOT_PWD)/systemc/install/lib-linux64 $(shell python3-config --ldflags) -lpython3.9
+LD_FLAGS = -fPIC -L$(ROOT_PWD)/systemc/install/lib-linux64 -lsystemc -lm -Wl,-rpath,$(ROOT_PWD)/systemc/install/lib-linux64 $(shell python3-config --ldflags) -lpython3.10 
+#-lcppyy.cpython-310-x86_64-linux-gnu -L/mnt/data/pysc_env/lib/python3.10/site-packages
 build:
 	mkdir build
 
@@ -17,10 +21,10 @@ clean:
 	rm -f libpysc.so
 
 libpysc.so: build $(DEPS)
-	g++ -shared -o $@ $(DEPS) $(LD_FLAGS) 
+	$(GXX) -shared -o $@ $(DEPS) $(LD_FLAGS) 
 
 build/%.o: src/%.cc $(HEADERS)
-	g++ $(CXX_FLAGS) -c -o $@ $<
+	$(GXX) $(CXX_FLAGS) -c -o $@ $<
 
 test:
 	echo $(SRC)

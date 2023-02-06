@@ -13,7 +13,7 @@ DEFS =
 INCDIRS = $(ROOT_PWD)/systemc/install/include RISC-V-TLM/inc $(PYSC_INC)
 LIBDIR = $(ROOT_PWD)/systemc/install/lib-linux64 $(PYSC_LIB)
 LIBS = systemc pysc fmt
-CXX_FLAGS = $(DEFS) -g -fPIC -std=c++17 $(foreach x, $(INCDIRS), -I$(x)) $(foreach x, $(LIBDIR), -L$(x)) $(foreach x, $(LIBS), -l$(x)) $(shell python3-config --includes)
+CXX_FLAGS = $(DEFS) -g -fPIC -std=c++17 $(foreach x, $(INCDIRS), -I$(x)) $(foreach x, $(LIBDIR), -L$(x)) $(foreach x, $(LIBS), -l$(x)) $(shell python3-config --includes) $(CPPFLAGS)
 LD_FLAGS =  -fPIC $(foreach x, $(LIBDIR), -L$(x)) $(foreach x, $(LIBS), -l$(x)) $(foreach x, $(LIBDIR), -Wl,-rpath,$(x)) $(shell python3-config --ldflags)
 
 
@@ -25,7 +25,7 @@ clean:
 
 sim: build $(DEPS) $(PYSC_LIB)/libpysc.so
 	g++ -o $@ $(DEPS) $(LD_FLAGS)
-	
+
 sim.so: build $(DEPS) $(PYSC_LIB)/libpysc.so
 	g++ -shared -o $@ $(DEPS) $(LD_FLAGS) 
 

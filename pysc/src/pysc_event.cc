@@ -32,7 +32,7 @@ static PyObject* pysc_event_notify(PyObject *_self, PyObject *args){
 
 
 PyTypeObject pysc_event_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
+    PyVarObject_HEAD_INIT(&PyType_Type,0)
     "pysc.pysc_event",
     sizeof(pysc_event),
 };

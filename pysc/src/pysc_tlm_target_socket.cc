@@ -58,7 +58,7 @@ static PyObject* pysc_tlm_target_socket_register_b_transport(PyObject *_self, Py
 }
 
 PyTypeObject pysc_tlm_target_socket_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
+    PyVarObject_HEAD_INIT(&PyType_Type,0)
     "pysc.tlm_target_socket",
     sizeof(pysc_tlm_target_socket),
 };

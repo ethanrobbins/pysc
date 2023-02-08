@@ -108,7 +108,7 @@ static PyObject* pysc_tlm_generic_payload_set_response_status(PyObject *_self, P
 }
 
 PyTypeObject pysc_tlm_generic_payload_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
+    PyVarObject_HEAD_INIT(&PyType_Type,0)
     "pysc.tlm_generic_payload",
     sizeof(pysc_tlm_generic_payload),
 };

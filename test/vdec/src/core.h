@@ -36,3 +36,4 @@ class CORE: public sc_module {
 
 };
 
+extern "C" void hello_world();

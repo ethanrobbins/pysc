@@ -36,7 +36,7 @@ static PyObject* pysc_signal_negevent(PyObject *_self, PyObject *args){
 
 
 PyTypeObject pysc_signal_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
+    PyVarObject_HEAD_INIT(&PyType_Type,0)
     "pysc.pysc_signal",
     sizeof(pysc_signal),
 };

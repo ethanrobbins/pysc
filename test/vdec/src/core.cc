@@ -88,3 +88,7 @@ void CORE::hello(){
     cout << "HELLO WORLD:" << this << endl;
     //test_int->write(42);
 }
+
+extern "C" void hello_world(){
+    cout << "hello from a simple function" << endl;
+}

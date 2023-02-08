@@ -37,11 +37,13 @@ Pysc_thread::~Pysc_thread(){
 }
 void Pysc_thread::run(){
     cur_thread = this;
+    this->gil_state = PyGILState_Ensure();
     PyInterpreterState *intr_state = PyInterpreterState_Get();
     this->thread_state = PyThreadState_New(intr_state);
     PyThreadState_Swap(this->thread_state);
     PyObject *r = PyObject_CallNoArgs(this->callable);
     PyThreadState_Swap(top_thread_state);
+    PyGILState_Release(this->gil_state);
     cur_thread = NULL;
     Py_DECREF(r);
     std::cout << "Finished thread " << name << std::endl;
@@ -49,11 +51,12 @@ void Pysc_thread::run(){
 }
 
 void Pysc_thread::pre_block(){
-    PyThreadState_Swap(top_thread_state);
+    PyGILState_Release(this->gil_state);
     //cout << "pre_wait(" << this->name << ")" << endl;
     cur_thread = NULL;
 }
 void Pysc_thread::post_block(){
+    this->gil_state = PyGILState_Ensure();
     PyThreadState_Swap(this->thread_state);
     //cout << "post_wait(" << this->name << ")" << endl;
     cur_thread = this;

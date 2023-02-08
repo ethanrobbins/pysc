@@ -1,18 +1,34 @@
 import pdb, sys, traceback
 import builtins as __builtin__
-#import cppyy
+import cppyy
 
-#cppyy.add_include_path("../../systemc/install/include")
-#cppyy.add_include_path("src")
-#cppyy.add_include_path("../../pysc/include")
-#cppyy.include("systemc.h")
-#cppyy.include("core.h")
-#cppyy.add_library_path('../../pysc')
-#cppyy.add_library_path('../../systemc/install/lib-linux64')
-#cppyy.load_library("sim.so")
-#cppyy.load_library('../../systemc/install/lib-linux64/libsystemc.so')
+import sim
+
+cppyy.set_debug(True)
+
+cppyy.add_include_path("../../systemc/install/include")
+cppyy.add_include_path("src")
+cppyy.add_include_path("../../pysc/include")
+##cppyy.include("systemc.h")
+cppyy.include("core.h")
+cppyy.add_library_path('../../pysc')
+cppyy.add_library_path('../../systemc/install/lib-linux64')
+#breakpoint()
+#cppyy.load_library('systemc-2.3.4.so')
 #cppyy.load_library('../../pysc/libpysc.so')
+#cppyy.load_library("sim.so")
+#cppyy.load_library("/mnt/data/pysc/pysc/test/vdec/sim.so")
 
+cppyy.cppdef("""
+extern "C" void hello_world();
+void test_hello(){
+    hello_world();
+    }
+""")
+
+breakpoint()
+
+print("LOADED")
 
 hack = []
 
@@ -53,13 +69,7 @@ def sc_main():
 
 if __name__ == "__main__":
     print("Python is TOP")
-    import cppyy
     import sim
-    cppyy.add_include_path("../../systemc/install/include")
-    cppyy.add_include_path("src")
-    cppyy.add_include_path("../../pysc/include")
-    #cppyy.include("systemc.h")
-    cppyy.include("core.h")
 
     sim.set_factory_module(f)
 
@@ -132,8 +142,13 @@ class Core(pysc.py_module):
  
     def end_of_elaboration(self):
         print("Core::end_of_elaboration")
+        #breakpoint()
         #self.sc_mod = cppyy.gbl.py_module["CORE"].FOO(self)
-        self.sc_mod = self.get_parent() #cppyy.gbl.efr_getCore(self) #py_module["CORE"].get_module(self)
+        #breakpoint()
+        cppyy.gbl.test_hello()
+        #cppyy.gbl.hello_world()
+        #self.sc_mod = self.get_parent() #cppyy.gbl.efr_getCore(self) #py_module["CORE"].get_module(self)
+        print("Core::end_of_elaboration done")
  
     def start_of_simulation(self):
         print("Core::start_of_simulation")

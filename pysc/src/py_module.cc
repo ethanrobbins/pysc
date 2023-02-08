@@ -161,7 +161,7 @@ static void pysc_module_dealloc(PyObject *_self){
 
 
 PyTypeObject pysc_module_Type = {
-    PyVarObject_HEAD_INIT(NULL, 0)
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
     "pysc.py_module",
     sizeof(pysc_module),
 };

@@ -72,7 +72,7 @@ static PyObject * pysc_time_alloc(PyTypeObject *_self, Py_ssize_t nitems){
 //TODO add support for creating a new time object
 
 PyTypeObject pysc_time_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
+    PyVarObject_HEAD_INIT(&PyType_Type,0)
     "pysc.time",
     sizeof(pysc_time),
 };

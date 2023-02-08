@@ -20,7 +20,7 @@ class Pysc_thread{
         const char *name;
     private:
         PyObject *callable;
-        
+        PyGILState_STATE gil_state;
         PyThreadState *thread_state;
 };
 

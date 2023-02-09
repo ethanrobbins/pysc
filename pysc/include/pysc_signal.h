@@ -105,6 +105,7 @@ class SignalProxy: public SignalProxyBase{
             pysc_event *r = (pysc_event*) pysc_event_Type.tp_alloc(&pysc_event_Type, 0);
             r->e.event = e;
             r->can_trigger = false;
+            r->python_owns = false;
             return r;
         }
         virtual pysc_event *pos_event(){
@@ -193,6 +194,7 @@ class SignalProxy<TYPE>: public SignalProxyBase{  \
             pysc_event *r = (pysc_event*) pysc_event_Type.tp_alloc(&pysc_event_Type, 0);  \
             r->e.event = e;  \
             r->can_trigger = false;  \
+            r->python_owns = false; \
             return r;  \
         }  \
     private:  \
@@ -276,6 +278,7 @@ class SignalProxy<bool>: public SignalProxyBase{
             pysc_event *r = (pysc_event*) pysc_event_Type.tp_alloc(&pysc_event_Type, 0);
             r->e.event = e;
             r->can_trigger = false;
+            r->python_owns = false;
             return r;
         }
         virtual pysc_event *pos_event(){
@@ -297,6 +300,7 @@ class SignalProxy<bool>: public SignalProxyBase{
             pysc_event *r = (pysc_event*) pysc_event_Type.tp_alloc(&pysc_event_Type, 0);
             r->e.event = e;
             r->can_trigger = false;
+            r->python_owns = false;
             return r;
         } 
         virtual pysc_event *neg_event(){ 
@@ -318,6 +322,7 @@ class SignalProxy<bool>: public SignalProxyBase{
             pysc_event *r = (pysc_event*) pysc_event_Type.tp_alloc(&pysc_event_Type, 0);
             r->e.event = e;
             r->can_trigger = false;
+            r->python_owns = false;
             return r;
        }
     private:

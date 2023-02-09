@@ -8,7 +8,7 @@ using namespace sc_dt;
 using namespace std;
 
 class MEM: public sc_module {
-    py_module py;
+    py_module<MEM> py;
     SC_HAS_PROCESS(MEM);
     public:
     MEM(sc_module_name name);

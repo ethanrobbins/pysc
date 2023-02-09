@@ -107,11 +107,6 @@ static PyObject* pysc_tlm_generic_payload_set_response_status(PyObject *_self, P
     Py_RETURN_NONE;
 }
 
-PyTypeObject pysc_tlm_generic_payload_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
-    "pysc.tlm_generic_payload",
-    sizeof(pysc_tlm_generic_payload),
-};
 
 static PyMethodDef pysc_tlm_generic_payload_method_def[] = {
     {"set_data", &pysc_tlm_generic_payload_set_data, METH_VARARGS, "Sets the data/len part of the generic payload"},
@@ -153,16 +148,27 @@ PyBufferProcs pysc_tlm_generic_payload_buffer_def{
     pysc_tlm_generic_payload_releasebuffer
 };
 
+PyTypeObject pysc_tlm_generic_payload_Type = {
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+    .tp_name = "pysc.tlm_generic_payload",
+    .tp_basicsize = sizeof(pysc_tlm_generic_payload),
+    .tp_itemsize = 0,
+    .tp_dealloc = pysc_tlm_generic_payload_del,
+    .tp_str = pysc_tlm_generic_payload_str,
+    //.tp_getattro = PyObject_GenericGetAttr,
+    //.tp_setattro = PyObject_GenericSetAttr,
+    .tp_as_buffer = &pysc_tlm_generic_payload_buffer_def,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = pysc_tlm_generic_payload_method_def,
+    //.tp_dictoffset = offsetof(pysc_module_s, pdict),
+    .tp_init = pysc_tlm_generic_payload_init,
+    .tp_alloc = PyType_GenericAlloc,
+    .tp_new = PyType_GenericNew,
+    //.tp_free = pysc_module_free,
+};
 
 static void setup(PyObject *pysc_module){
-    pysc_tlm_generic_payload_Type.tp_methods = pysc_tlm_generic_payload_method_def;
-    pysc_tlm_generic_payload_Type.tp_init = &pysc_tlm_generic_payload_init;
-    pysc_tlm_generic_payload_Type.tp_str = &pysc_tlm_generic_payload_str;
-    pysc_tlm_generic_payload_Type.tp_new = PyType_GenericNew;
-    pysc_tlm_generic_payload_Type.tp_dealloc = &pysc_tlm_generic_payload_del;
-    pysc_tlm_generic_payload_Type.tp_as_buffer = &pysc_tlm_generic_payload_buffer_def;
-
-    PyObject *dict = PyDict_New();
+     PyObject *dict = PyDict_New();
     PyDict_SetItemString(dict, "TLM_READ_COMMAND", PyLong_FromLong(tlm::TLM_READ_COMMAND));
     PyDict_SetItemString(dict, "TLM_WRITE_COMMAND", PyLong_FromLong(tlm::TLM_WRITE_COMMAND));
     PyDict_SetItemString(dict, "TLM_IGNORE_COMMAND", PyLong_FromLong(tlm::TLM_IGNORE_COMMAND));

@@ -34,13 +34,6 @@ static PyObject* pysc_signal_negevent(PyObject *_self, PyObject *args){
     return (PyObject*) self->sig->neg_event();
 }
 
-
-PyTypeObject pysc_signal_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
-    "pysc.pysc_signal",
-    sizeof(pysc_signal),
-};
-
 static PyMethodDef pysc_signal_method_def[] = {
     {"read", &pysc_signal_read, METH_NOARGS, "reads the signal"},
     {"write", &pysc_signal_write, METH_O, "writes the signal"},
@@ -50,8 +43,24 @@ static PyMethodDef pysc_signal_method_def[] = {
     {NULL, NULL, 0, NULL}
 };
 
+PyTypeObject pysc_signal_Type = {
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+    .tp_name = "pysc.py_signal",
+    .tp_basicsize = sizeof(pysc_signal),
+    .tp_itemsize = 0,
+    //.tp_dealloc = pysc_module_dealloc, //TODO this will need to free the systemc type?
+    //.tp_getattro = PyObject_GenericGetAttr,
+    //.tp_setattro = PyObject_GenericSetAttr,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = pysc_signal_method_def,
+    //.tp_dictoffset = offsetof(pysc_module_s, pdict),
+    //.tp_init = pysc_module_init,
+    //.tp_alloc = PyType_GenericAlloc,
+    //.tp_new = PyType_GenericNew,
+    //.tp_free = pysc_module_free,
+};
+
 static void setup(PyObject *pysc_module){
-    pysc_signal_Type.tp_methods = pysc_signal_method_def;
 
     PyType_Ready(&pysc_signal_Type);
     Py_INCREF(&pysc_signal_Type);

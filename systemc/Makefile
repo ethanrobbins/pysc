@@ -1,4 +1,5 @@
 PWD = $(shell pwd)
+GXX := g++
 
 2.3.4.tar.gz:
 	wget https://github.com/accellera-official/systemc/archive/refs/tags/2.3.4.tar.gz
@@ -11,11 +12,11 @@ build_dir:
 
 install: build_dir systemc-2.3.4
 	cd systemc-2.3.4; ./config/bootstrap
-	cd build_dir; ../systemc-2.3.4/configure --prefix=$(PWD)/install --enable-debug CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17"
-	make -C build_dir install
+	cd build_dir; ../systemc-2.3.4/configure --prefix=$(PWD)/install --enable-debug GXX=$(GXX) CXXFLAGS="-DSC_CPLUSPLUS=201703L -std=c++17"
+	make -C build_dir -j6 install
 	
 build:
-	make -C build_dir install
+	make -C build_dir -j6 install
 
 
 clean:

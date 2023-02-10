@@ -1,6 +1,8 @@
 import pdb, sys, traceback
 import builtins as __builtin__
 
+hack = []
+
 class Factory:
     def __init__(self):
         self.class_reg = {}
@@ -9,10 +11,13 @@ class Factory:
             self.class_reg[cl_name] = cls
         return inner
  
-    def get_class(self, cls_name, mod):
+    def get_class(self, cls_name):
         print("Factory::get_class(%s)"%(cls_name))
         C = self.class_reg[cls_name]
-        return C(mod)
+        return C
+        c = C()
+        hack.append(c)
+        return c
 
 f = Factory()
 def get_factory():
@@ -39,6 +44,8 @@ if __name__ == "__main__":
     import sim
     sim.set_factory_module(f)
 
+    
+
 import pysc
 
 __print__ = __builtin__.print
@@ -46,19 +53,23 @@ def sc_print(*args, **kwargs):
     t = "%0.1f ns  "%(pysc.cur_time().ps/1000)
     __print__(t, end='')
     __print__(*args, **kwargs)
-print = sc_print
+#print = sc_print
 
 @f.register("Mem")
-class Mem:
-    def __init__(self, mod):
+class Mem(pysc.py_module):
+    def __init__(self):
         print("called Mem::init")
-        self.mod = mod
+        super().__init__(self)
         self.target_socket = pysc.tlm_target_socket()
         self.target_socket.register_b_transport(self.b_transport)
-        self.mod.set_socket("sock", self.target_socket)
+        self.set_socket("sock", self.target_socket)
         self.data = bytearray(1024)
         self.READ_TIME = pysc.time(2, pysc.time.SC_NS)
         self.WRITE_TIME = pysc.time(4, pysc.time.SC_NS)
+
+    def __new__(self):
+        print("Mem::new")
+        return super().__new__(self)
 
     @try_dbg
     def b_transport(self, trans, delay):
@@ -83,15 +94,28 @@ class Mem:
     def end_of_elaboration(self):
         print("Mem::end_of_elaboration")
     def start_of_simulation(self):
-        pass 
+        self.SC_THREAD(self.run_mem,"runmem")
+
     def end_of_simulation(self):
         pass
 
+    def run_mem(self):
+        print("called Mem::Run")
+        e = self.clk_in.posedge_event()
+        while True:
+            pysc.wait(e)
+            if self.rd_en.read():
+                print("MEM read %x"%(self.address.read()))
+            if self.wr_en.read():
+                print("MEM write %x %x"%(self.address.read(), self.wr_data.read()))
+            
+
+
 @f.register("Core")
-class Core:
-    def __init__(self, mod):
+class Core(pysc.py_module):
+    def __init__(self):
         print("Core::__init__ called")
-        self.mod = mod
+        super().__init__(self)
 
     def __del__(self):
         print("CALLED __del__ @@@@@@@@@@@@@@@@@@@@")
@@ -101,11 +125,10 @@ class Core:
 
     def start_of_simulation(self):
         print("Core::start_of_simulation")
-        self.mod.SC_THREAD(self.run,"run")
+        self.SC_THREAD(self.run,"run")
 
     def end_of_simulation(self):
         print("Core::end_of_simulation")
-        t = pysc.cur_time()
         print("Finished sim ")
 
     def write(self, address, data):

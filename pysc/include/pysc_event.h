@@ -15,6 +15,7 @@ typedef struct {
         sc_event *notify_event;
     }e;
     bool can_trigger;
+    bool python_owns;
 } pysc_event;
 
 extern PyTypeObject pysc_event_Type;

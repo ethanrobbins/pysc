@@ -12,7 +12,7 @@ class BackingMemory:
         self.mod = mod
         self.run_stats = run_stats
         self.mem = ElfMem.ElfMem(filename)
-        self.event = pysc.pysc_event.create("memory")
+        self.event = pysc.pysc_event("memory")
         self.mod.SC_THREAD(self.run, "memory")
 
         self.semaphore = thread_utils.Semaphore()

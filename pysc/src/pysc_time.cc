@@ -51,14 +51,6 @@ PyObject* pysc_time_str(PyObject *_self){
     return r;
 }
 
-//TODO add support for creating a new time object
-
-PyTypeObject pysc_time_Type = {
-    PyVarObject_HEAD_INIT(NULL,0)
-    "pysc.time",
-    sizeof(pysc_time),
-};
-
 static PyMethodDef pysc_time_method_def[] = {
     {NULL, NULL, 0, NULL}
 };
@@ -70,13 +62,27 @@ static PyGetSetDef pysc_time_getset[] = {
     NULL
 };
 
+PyTypeObject pysc_time_Type = {
+    PyVarObject_HEAD_INIT(&PyType_Type, 0)
+    .tp_name = "pysc.time",
+    .tp_basicsize = sizeof(pysc_time),
+    .tp_itemsize = 0,
+    //.tp_dealloc = pysc_time_dealloc,
+    .tp_str = &pysc_time_str,
+    //.tp_getattro = PyObject_GenericGetAttr,
+    //.tp_setattro = PyObject_GenericSetAttr,
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_methods = pysc_time_method_def,
+    .tp_getset = pysc_time_getset,
+    //.tp_dictoffset = offsetof(pysc_module_s, pdict),
+    .tp_init = pysc_time_init,
+    .tp_alloc = PyType_GenericAlloc,
+    .tp_new = PyType_GenericNew,
+    //.tp_free = pysc_module_free,
+};
+
 
 static void setup(PyObject *pysc_module){
-    pysc_time_Type.tp_getset = pysc_time_getset;
-    pysc_time_Type.tp_methods = pysc_time_method_def;
-    pysc_time_Type.tp_init = &pysc_time_init;
-    pysc_time_Type.tp_str = &pysc_time_str;
-    pysc_time_Type.tp_new = PyType_GenericNew;
 
     PyObject *dict = PyDict_New();
     PyDict_SetItemString(dict, "SC_MS", PyLong_FromLong(SC_MS));

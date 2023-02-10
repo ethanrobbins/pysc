@@ -7,7 +7,7 @@ class WriteFifo:
         self.params = p
         self.name = name
         self.mod = mod
-        self.event = pysc.pysc_event.create("write_fifo")
+        self.event = pysc.pysc_event("write_fifo")
         self.mod.SC_THREAD(self.run_enque, "write_fifo_enque")
         self.mod.SC_THREAD(self.run_deque, "write_fifo_deque")
 

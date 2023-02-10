@@ -92,7 +92,7 @@ void pysc_initialize(const char *top_module_name){
     pysc_initialized = true;
 }
 
-void pysc_initialize_lib(PyObject *_factory_module){
+void pysc_initialize_lib(){
     PyInterpreterState *intr_state = PyInterpreterState_Get();
     top_thread_state = PyThreadState_Get();//PyThreadState_New(intr_state);
  
@@ -106,10 +106,7 @@ void pysc_initialize_lib(PyObject *_factory_module){
     Py_DECREF(pysc_module);
     Py_DECREF(sys_modules);
 
-    factory_module = _factory_module;
-    Py_INCREF(factory_module);
-    pysc_initialized = true;
- }
+}
 
 bool pysc_add_class(void (*setup)(PyObject *)){
     if(class_setup_list==NULL){
@@ -151,7 +148,10 @@ static PyObject* pysc_sim_restart(PyObject *_self, PyObject *args){
 }
 
 static PyObject* pysc_sim_set_factory_module(PyObject *_self, PyObject *args){
-    pysc_initialize_lib(args);
+    factory_module = args;
+    Py_INCREF(factory_module);
+    pysc_initialized = true;
+
     cout << "SIM:: set_factory_module" << endl;
     Py_RETURN_NONE;
 }
@@ -182,5 +182,6 @@ PyModuleDef sim_ModuleDef = {
 };
 
 PyObject *sim_PyInit(){ \
+    pysc_initialize_lib(); \
     return  PyModule_Create(&sim_ModuleDef); \
 }

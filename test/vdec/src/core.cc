@@ -2,7 +2,7 @@
 #include <systemc>
 using namespace sc_core;
 
-CORE::CORE(sc_module_name name):sc_module(name), py("Core"),
+CORE::CORE(sc_module_name name):sc_module(name), py("Core",this),
         data_bus("data_bus"),
         clk_in("clk_in"),
         rd_en("rd_en"),

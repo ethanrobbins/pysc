@@ -1,7 +1,7 @@
 #include "mem.h"
 #include "pysc.h"
 
-MEM::MEM(sc_module_name name):sc_module(name), py("Mem"),
+MEM::MEM(sc_module_name name):sc_module(name), py("Mem",this),
     clk_in("clk_in"),
     rd_en("rd_en"),
     wr_en("wr_en"),
@@ -20,6 +20,13 @@ MEM::MEM(sc_module_name name):sc_module(name), py("Mem"),
     SC_METHOD(run);
     sensitive<<this->clk_in.pos();
 
+    EXPORT_SIG(clk_in, "clk_in", bool);
+    EXPORT_SIG(rd_en, "rd_en", bool);
+    EXPORT_SIG(wr_en, "wr_en", bool);
+    EXPORT_SIG(address, "address", sc_bv<32>);
+    EXPORT_SIG(wr_data, "wr_data", sc_bv<32>);
+    EXPORT_SIG(rd_data, "rd_data", sc_bv<32>);
+    EXPORT_SIG(data_val, "data_val", bool);   
 }
 void MEM::trace(sc_trace_file *tf){
     TRACE_SIG(tf, clk_in);

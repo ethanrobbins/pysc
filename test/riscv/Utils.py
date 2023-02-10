@@ -10,11 +10,11 @@ class Factory:
             self.class_reg[cl_name] = cls
         return inner
  
-    def get_class(self, cls_name, mod):
+    def get_class(self, cls_name):
         print("Factory::get_class(%s)"%(cls_name))
         C = self.class_reg[cls_name]
         print("get_class ok")
-        return C(mod)
+        return C
 f = Factory()
 
 def get_factory():

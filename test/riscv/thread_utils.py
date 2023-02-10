@@ -18,7 +18,7 @@ class Semaphore:
             self.event.notify()
 
     def __init__(self):
-        self.event = pysc.pysc_event.create("")
+        self.event = pysc.pysc_event("")
         self.pending = deque()
 
     def get(self):

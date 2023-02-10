@@ -42,22 +42,22 @@ session = Session(engine)
 run_stats = None
 
 @f.register("Memory")
-class Memory:
+class Memory(pysc.py_module):
     elf_file = "RISC-V-TLM/tests/C/dhrystone/dhrystone"
 
     @try_dbg
-    def __init__(self, mod):
+    def __init__(self):
         print("called Memory::init")
-        self.mod = mod
+        super().__init__(self)
         self.target_socket = pysc.tlm_target_socket()
         self.target_socket.register_b_transport(self.b_transport)
-        self.mod.set_socket("sock", self.target_socket)
+        self.set_socket("sock", self.target_socket)
 
-        self.serializer = serializer.Serializer("serializer",mod)
-        self.write_fifo = write_fifo.WriteFifo("write_fifo",mod,params.params_write_fifo)
-        self.cache = cache.Cache("cache", mod, params.params_cache)
-        self.mem_fifo = write_fifo.WriteFifo("mem_fifo",mod, params.params_mem_fifo)
-        self.memory = memory.BackingMemory("mem", mod, self.elf_file, run_stats, params.params_mem)
+        self.serializer = serializer.Serializer("serializer",self)
+        self.write_fifo = write_fifo.WriteFifo("write_fifo",self,params.params_write_fifo)
+        self.cache = cache.Cache("cache", self, params.params_cache)
+        self.mem_fifo = write_fifo.WriteFifo("mem_fifo",self, params.params_mem_fifo)
+        self.memory = memory.BackingMemory("mem", self, self.elf_file, run_stats, params.params_mem)
 
         self.serializer.next = self.write_fifo
         self.write_fifo.next = self.cache

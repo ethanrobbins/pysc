@@ -127,8 +127,8 @@ class Cache:
 
         self.read_sem = thread_utils.Semaphore()
         self.write_sem = thread_utils.Semaphore()
-        self.fill_event = pysc.pysc_event.create("fill_event")
-        self.comp_event = pysc.pysc_event.create("comp_event")
+        self.fill_event = pysc.pysc_event("fill_event")
+        self.comp_event = pysc.pysc_event("comp_event")
 
         self.write_time = pysc.time(self.params.CACHE_WRITE_NS, pysc.time.SC_NS)
         self.read_time = pysc.time(self.params.CACHE_READ_NS, pysc.time.SC_NS)
@@ -137,7 +137,7 @@ class Cache:
 
         self.mod.SC_THREAD(self.run, "cache")
         self.mod.SC_THREAD(self.stats, "cache_stats")
-        self.new_stats = pysc.pysc_event.create("stats")
+        self.new_stats = pysc.pysc_event("stats")
 
         self.fill_s = mod.create_signal("%s.fill"%(name))
         self.flush_s = mod.create_signal("%s.flush"%(name))

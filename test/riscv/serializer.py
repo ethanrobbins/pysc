@@ -8,7 +8,7 @@ class Serializer:
     def __init__(self, name, mod):
         self.name = name
         self.mod = mod
-        self.event = pysc.pysc_event.create("serializer")
+        self.event = pysc.pysc_event("serializer")
         self.mod.SC_THREAD(self.run, "serializer")
         self.cycle = pysc.time(1, pysc.time.SC_NS)
 
